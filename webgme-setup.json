@@ -1,0 +1,40 @@
+{
+  "components": {
+    "addons": {},
+    "decorators": {},
+    "layouts": {},
+    "plugins": {
+      "valid_check": {
+        "src": "src/plugins/valid_check",
+        "test": "test/plugins/valid_check"
+      },
+      "active_tiles": {
+        "src": "src/plugins/active_tiles",
+        "test": "test/plugins/active_tiles"
+      },
+      "count_color": {
+        "src": "src/plugins/count_color",
+        "test": "test/plugins/count_color"
+      }
+    },
+    "routers": {},
+    "seeds": {
+      "Othello": {
+        "src": "src/seeds/Othello"
+      },
+      "MetaModel_miniproject": {
+        "src": "src/seeds/MetaModel_miniproject"
+      }
+    },
+    "visualizers": {}
+  },
+  "dependencies": {
+    "addons": {},
+    "decorators": {},
+    "layouts": {},
+    "plugins": {},
+    "routers": {},
+    "seeds": {},
+    "visualizers": {}
+  }
+}
