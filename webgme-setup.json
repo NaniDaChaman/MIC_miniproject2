@@ -15,6 +15,18 @@
       "count_color": {
         "src": "src/plugins/count_color",
         "test": "test/plugins/count_color"
+      },
+      "auto": {
+        "src": "src/plugins/auto",
+        "test": "test/plugins/auto"
+      },
+      "tile_flip": {
+        "src": "src/plugins/tile_flip",
+        "test": "test/plugins/tile_flip"
+      },
+      "undo": {
+        "src": "src/plugins/undo",
+        "test": "test/plugins/undo"
       }
     },
     "routers": {},

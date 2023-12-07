@@ -1,13 +1,13 @@
 """
 This is where the implementation of the plugin code goes.
-The active_tiles-class is imported from both run_plugin.py and run_debug.py
+The auto-class is imported from both run_plugin.py and run_debug.py
 """
 import sys
 import logging
 from webgme_bindings import PluginBase
 
 # Setup a logger
-logger = logging.getLogger('active_tiles')
+logger = logging.getLogger('auto')
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler(sys.stdout)  # By default it logs to stderr..
 handler.setLevel(logging.INFO)
@@ -16,7 +16,7 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 
-class active_tiles(PluginBase):
+class auto(PluginBase):
   def main(self):
     active_node = self.active_node
     self.namespace=''
@@ -31,10 +31,17 @@ class active_tiles(PluginBase):
     for node in nodesList:      
        nodes[core.get_path(node)] = node  
     self.nodes=nodes
+    #tiles = self.active_tiles()
     #logger.info(self.count_color('black'))
-    return self.active_tiles()
+    #for t in tiles : 
+      #pieces=core.get_children_paths(t)
+      #logger.info("Tile has a piece : {0}".format(pieces))
+      #t_row=core.get_attribute(t,'row')
+      #t_col=core.get_attribute(t,'column')
+      #logger.info("{0},{1} is an active tile".format(t_row,t_col))
     #logger.info('Ths is our last piece played : {0}'.format(core.get_attribute(nodes[core.get_pointer_path(active_node,'lastPiece')],'Piece')))
     #self.flip_lastpiece()
+    self.auto()
     #next_gs=core.get_pointer_path
     #logger.info('This is the next Gamestate : {0}'.format(next_gs))
     

@@ -1,13 +1,13 @@
 """
 This is where the implementation of the plugin code goes.
-The active_tiles-class is imported from both run_plugin.py and run_debug.py
+The undo-class is imported from both run_plugin.py and run_debug.py
 """
 import sys
 import logging
 from webgme_bindings import PluginBase
 
 # Setup a logger
-logger = logging.getLogger('active_tiles')
+logger = logging.getLogger('undo')
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler(sys.stdout)  # By default it logs to stderr..
 handler.setLevel(logging.INFO)
@@ -16,7 +16,7 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 
-class active_tiles(PluginBase):
+class undo(PluginBase):
   def main(self):
     active_node = self.active_node
     self.namespace=''
@@ -32,11 +32,12 @@ class active_tiles(PluginBase):
        nodes[core.get_path(node)] = node  
     self.nodes=nodes
     #logger.info(self.count_color('black'))
-    return self.active_tiles()
+    #return self.active_tiles()
     #logger.info('Ths is our last piece played : {0}'.format(core.get_attribute(nodes[core.get_pointer_path(active_node,'lastPiece')],'Piece')))
     #self.flip_lastpiece()
     #next_gs=core.get_pointer_path
     #logger.info('This is the next Gamestate : {0}'.format(next_gs))
+    self.undo()
     
     
   def active_tiles(self):

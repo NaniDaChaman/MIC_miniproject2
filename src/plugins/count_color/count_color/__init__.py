@@ -31,7 +31,9 @@ class count_color(PluginBase):
     for node in nodesList:      
        nodes[core.get_path(node)] = node  
     self.nodes=nodes
-    logger.info(self.count_color('black'))
+    color_black=self.count_color('black')  
+    color_white=self.count_color('white')
+    return color_black,color_white
     #logger.info(self.active_tiles())
     #logger.info('Ths is our last piece played : {0}'.format(core.get_attribute(nodes[core.get_pointer_path(active_node,'lastPiece')],'Piece')))
     #self.flip_lastpiece()
@@ -61,7 +63,7 @@ class count_color(PluginBase):
 
          state = {}        
          state['name'] = core.get_attribute(gamestate, 'name')        
-         logger.info(state)        
+         #logger.info(state)        
          cp_path=core.get_pointer_path(gamestate, 'currentPlayer')        
          if cp_path!=None :           
             state['currentPlayer'] = core.get_attribute(nodes[cp_path],'name')        
@@ -172,7 +174,8 @@ class count_color(PluginBase):
          return check_logic(state)
     
     valid_tiles=[]
-    cp_list=self.core.get_children_paths(self.active_node)
+    game_state=self.nodes[self.core.get_pointer_path(self.active_node,'currentState')]
+    cp_list=self.core.get_children_paths(game_state)
     self.logger.info('Childs of Game State {0}'.format(cp_list))
     for cp in cp_list:
       child=self.nodes[cp]
@@ -182,18 +185,20 @@ class count_color(PluginBase):
           f=self.core.get_attribute(tile,'pythonCode')
           row=self.core.get_attribute(tile,'row')
           column=self.core.get_attribute(tile,'column')
+          pieces=self.core.get_children_paths(tile)
           #self.logger.info("{0},{1} is the tile".format(row,column))
           #self.logger.info('Tile python code : {0}'.format(f))
-          if row is None or column is None :
+          if row is None or column is None or len(pieces)!=0:
             continue
           elif check_valid(tile):
-            valid_tiles.append(child)
-    return valid_tiles        
-   
-    
+            valid_tiles.append(tile)
+    return valid_tiles
+  
   def count_color(self,color):
     color_count=0
-    cp_list=self.core.get_children_paths(self.active_node)
+    game_state=self.nodes[self.core.get_pointer_path(self.active_node,'currentState')]
+    
+    cp_list=self.core.get_children_paths(game_state)
     
     #self.logger.info('Childs of Game State {0}'.format(self.core.get_attribute(cp_list,'name')))
     for cp in cp_list:
@@ -210,12 +215,32 @@ class count_color(PluginBase):
               color_count=color_count+1
     return color_count
   
-  def flip_lastpiece(self):
-    last_piece=self.nodes[self.core.get_pointer_path(self.active_node,'lastPiece')]
-    last_tile=self.core.get_parent(last_piece)
-    
-    
-    def check_valid(tile):
+  def undo(self):
+      game_folder=self.active_node#will be wrong in game folder
+      game_state=self.nodes[self.core.get_pointer_path(self.active_node,'currentState')]
+      
+      nodesList = self.core.load_sub_tree(game_folder)                                          
+      nodes = {}
+      
+      
+
+      for node in nodesList:      
+           nodes[self.core.get_path(node)] = node 
+      
+      prev_state_path=self.core.get_pointer_path(game_state,'prev')#remove dependecy and add game state
+      
+      if prev_state_path is None : 
+        self.logger.info("Can't undo initial game state ")
+        return
+      
+      prev_state=nodes[prev_state_path]#doubtfull
+      self.core.set_pointer(game_folder,'currentState',prev_state)
+      self.core.delete_node(game_state)#remove dependecy and add game state
+      self.util.save(self.root_node,self.commit_hash,self.branch_name)
+      
+  def auto(self):
+        
+      def check_valid(tile):
          
          import math        
          active_node = tile   
@@ -264,19 +289,22 @@ class count_color(PluginBase):
                         board[core.get_attribute(nodes[tile],'row')][core.get_attribute(nodes[tile],'column')]['color'] = core.get_attribute(nodes[piece],'color')
                         #logger.info(board)
          state['board'] = board
-         #logger.info(state)
+         logger.info(state['board'])
          #logger.info(core.get_parent(gamestate))
        
-          
+         logger.info("Gamestate nodepath before next{0}".format(gamestate["nodePath"]))
           
           
          next_gs = core.copy_node(gamestate,core.get_parent(gamestate))
-         core.set_pointer(self.active_node,'next',next_gs)
+         core.set_pointer(next_gs,'prev',gamestate)
          next_name=core.get_attribute(gamestate,'name')+str(1)
-         core.set_attribute(gamestate,'name',next_name)
+         core.set_attribute(next_gs,'name',next_name)
          next_nodes={}
+         logger.info("Gamestate nodepath after next{0}".format(gamestate["nodePath"]))
          for node in core.load_sub_tree(next_gs) :      
              next_nodes[core.get_path(node)] = node 
+              
+         
         
          def set_nextPlayer(next_gs,next_nodes):
             cp_path=core.get_pointer_path(next_gs,'currentPlayer')
@@ -298,12 +326,17 @@ class count_color(PluginBase):
               
             for tile in core.get_children_paths(next_board):
               tile=next_nodes[tile]
+              logger.debug(tile['nodePath'])
+              logger.debug(next_gs['nodePath'])
               next_pos=(core.get_attribute(tile,'row'),core.get_attribute(tile,'column'))
               if next_pos==pos : 
                 next_piece=core.create_child(tile,META['Piece'])#usingcopy_node to create a new node
+                #self.logger.info("Tile where piece will be created : {0},{1}".format(pos[0],pos[1]))
+                
                 next_nodes[core.get_path(next_piece)]=next_piece#added piece to next_nodes
                 core.set_attribute(next_piece,'color',player_color)
                 core.set_pointer(next_gs,'currentMove',next_piece)
+                
                 nm_path=core.get_pointer_path(next_gs,'currentMove')
                 nm=next_nodes[nm_path]
                 return core.get_attribute(nm,'color')
@@ -431,22 +464,17 @@ class count_color(PluginBase):
          else : 
           logger.error('Not a Valid Move')
          return   check_logic(state)
-    check_valid(last_tile)
-    
-    def undo(self):
-      game_folder=self.core.get_parent(self.active_node)
-      
-      nodesList = core.load_sub_tree(game_folder)                                          
-      nodes = {}  
-
-      for node in nodesList:      
-           nodes[core.get_path(node)] = node 
-      
-      prev_state_path=self.core.get_pointer_path(self.active_node,'prev')
-      prev_state=self.nodes[prev_state]#doubtfull
-      self.core_set_pointer(game_folder,'currentState',prev_state)
-      self.core.delete_node(self.active_node)
-      self.util.save(self.root_node,self.commit_hash,self.branch_name)
+      tiles=self.active_tiles()
+      if len(tiles)!=0:
+        tile=tiles[0]
+        
+        t_row=self.core.get_attribute(tile,'row')
+        t_col=self.core.get_attribute(tile,'column')
+        self.logger.info("{0},{1} is the active tile the AI will play".format(t_row,t_col))
+        
+        check_valid(tile)
+      else :
+        logger.info("No more valid moves left")
       
     
 
