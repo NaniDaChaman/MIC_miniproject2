@@ -40,6 +40,7 @@ class tile_flip(PluginBase):
          logger.info('Current Node : {0},{1}'.format(core.get_attribute(active_node,'row'),core.get_attribute(active_node,'column')))
          board=core.get_parent(active_node)
          gamestate=core.get_parent(board)
+         gamefolder=core.get_parent(gamestate)
          nodesList = core.load_sub_tree(gamestate)                                          
          nodes = {}  
 
@@ -85,7 +86,9 @@ class tile_flip(PluginBase):
           
           
          next_gs = core.copy_node(gamestate,core.get_parent(gamestate))
-         core.set_pointer(self.active_node,'next',next_gs)
+        # core.set_pointer(self.active_node,'next',next_gs)
+         core.set_pointer(next_gs,'prev',gamestate)
+         core.set_pointer(gamefolder,'currentState',next_gs)
          next_name=core.get_attribute(gamestate,'name')+str(1)
          core.set_attribute(next_gs,'name',next_name)
          next_nodes={}
@@ -151,6 +154,7 @@ class tile_flip(PluginBase):
             #set_currentMove pointer
          pos=(row,column)
          player_color= core.get_attribute(nodes[cp_path],'color')
+         
          if player_color =='black':
           player_color='white'
          else :

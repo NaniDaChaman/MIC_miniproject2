@@ -265,7 +265,7 @@ class auto(PluginBase):
 
          state = {}        
          state['name'] = core.get_attribute(gamestate, 'name')        
-         logger.info(state)        
+         #logger.info(state)        
          cp_path=core.get_pointer_path(gamestate, 'currentPlayer')        
          if cp_path!=None :           
             state['currentPlayer'] = core.get_attribute(nodes[cp_path],'name')        
@@ -294,7 +294,7 @@ class auto(PluginBase):
                         board[core.get_attribute(nodes[tile],'row')][core.get_attribute(nodes[tile],'column')]['color'] = core.get_attribute(nodes[piece],'color')
                         #logger.info(board)
          state['board'] = board
-         logger.info(state['board'])
+         #logger.info(state['board'])
          #logger.info(core.get_parent(gamestate))
        
          logger.info("Gamestate nodepath before next{0}".format(gamestate["nodePath"]))
@@ -302,10 +302,11 @@ class auto(PluginBase):
           
          next_gs = core.copy_node(gamestate,core.get_parent(gamestate))
          core.set_pointer(next_gs,'prev',gamestate)
+         core.set_pointer(self.active_node,'currentState',next_gs)
          next_name=core.get_attribute(gamestate,'name')+str(1)
          core.set_attribute(next_gs,'name',next_name)
          next_nodes={}
-         logger.info("Gamestate nodepath after next{0}".format(gamestate["nodePath"]))
+         #logger.info("Gamestate nodepath after next{0}".format(gamestate["nodePath"]))
          for node in core.load_sub_tree(next_gs) :      
              next_nodes[core.get_path(node)] = node 
               
@@ -331,8 +332,8 @@ class auto(PluginBase):
               
             for tile in core.get_children_paths(next_board):
               tile=next_nodes[tile]
-              logger.debug(tile['nodePath'])
-              logger.debug(next_gs['nodePath'])
+              #logger.debug(tile['nodePath'])
+              #logger.debug(next_gs['nodePath'])
               next_pos=(core.get_attribute(tile,'row'),core.get_attribute(tile,'column'))
               if next_pos==pos : 
                 next_piece=core.create_child(tile,META['Piece'])#usingcopy_node to create a new node
