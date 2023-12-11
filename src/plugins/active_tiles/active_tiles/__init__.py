@@ -5,6 +5,7 @@ The active_tiles-class is imported from both run_plugin.py and run_debug.py
 import sys
 import logging
 from webgme_bindings import PluginBase
+import json
 
 # Setup a logger
 logger = logging.getLogger('active_tiles')
@@ -31,8 +32,17 @@ class active_tiles(PluginBase):
     for node in nodesList:      
        nodes[core.get_path(node)] = node  
     self.nodes=nodes
+    tiles=self.active_tiles()
+    t_pos=[]
+    for t in tiles:
+       t_row=core.get_attribute(t,'row')
+       t_column=core.get_attribute(t,'column')
+       t_pos.append((t_row,t_column))
+    self.create_message(active_node, json.dumps(t_pos))
+    
+
     #logger.info(self.count_color('black'))
-    return self.active_tiles()
+    return tiles
     #logger.info('Ths is our last piece played : {0}'.format(core.get_attribute(nodes[core.get_pointer_path(active_node,'lastPiece')],'Piece')))
     #self.flip_lastpiece()
     #next_gs=core.get_pointer_path
@@ -165,8 +175,8 @@ class active_tiles(PluginBase):
                     result=result or valid[i]        
                     if result==True:          
                         return result      
-                print(f"Valid : {valid}")
-                print(f"Result is {result}")
+                #rint(f"Valid : {valid}")
+               #print(f"Result is {result}")
             return result     
                 
          return check_logic(state)

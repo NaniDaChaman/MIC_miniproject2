@@ -5,6 +5,7 @@ The count_color-class is imported from both run_plugin.py and run_debug.py
 import sys
 import logging
 from webgme_bindings import PluginBase
+import json
 
 # Setup a logger
 logger = logging.getLogger('count_color')
@@ -33,6 +34,8 @@ class count_color(PluginBase):
     self.nodes=nodes
     color_black=self.count_color('black')  
     color_white=self.count_color('white')
+    colors={'black':color_black,'white':color_white}
+    self.create_message(active_node, json.dumps(colors))
     return color_black,color_white
     #logger.info(self.active_tiles())
     #logger.info('Ths is our last piece played : {0}'.format(core.get_attribute(nodes[core.get_pointer_path(active_node,'lastPiece')],'Piece')))
