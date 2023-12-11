@@ -1,5 +1,5 @@
 # mic-react-viz
-This is SParsh Amarnani's implementation of CS-6388-01 Model-Integrated Computing final mini project, a game studo for the othello game.
+This is Sparsh Amarnani's implementation of CS-6388-01 Model-Integrated Computing final mini project, a game studo for the othello game.
 ## Installation
 To install this design studio. 
 
@@ -7,7 +7,11 @@ To install this design studio.
 ### Basic deployment
 For a regular deployment, you need to install the following components on top of fetching this repository:
 - [NodeJS](https://nodejs.org/en/) (LTS recommended)
-- [MongoDB](https://www.mongodb.com/)
+- install Docker Desktop
+- pull mongo db image from Docker Desktop
+- Create a container for the image 
+- Run the container 
+- Fetch the repository
 
 After all components in place, you need to install the dependencies, using `npm i` command and start your deployment 
 using the `node ./app.js` command. If you have not changed the configuration, your design studio should be accessible on 
@@ -29,6 +33,14 @@ needs to be set for them to work as intended.
 There is a 2 seeds in the project representing the othello game - but all other default seeds are also available.
 
 We use MetaModel_miniproject.webgmex.
+
+### Meta
+- prev : represents the previous gamestate, pointer from gamestate to gamestate
+- currentstate : represents the current gamestate , pointer from gamefolder to gamestate
+- Game : folder for various games being played
+- currentPlayer : represents the previous games being played, from gamestate to piece 
+- currentMove : represnts the previous piece being played, from gamestate to piece
+
 
 ### Plugin
 
