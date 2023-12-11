@@ -27,6 +27,22 @@
       "undo": {
         "src": "src/plugins/undo",
         "test": "test/plugins/undo"
+      },
+      "BuildDescriptor": {
+        "src": "src/plugins/BuildDescriptor",
+        "test": "test/plugins/BuildDescriptor"
+      },
+      "CheckWinCondition": {
+        "src": "src/plugins/CheckWinCondition",
+        "test": "test/plugins/CheckWinCondition"
+      },
+      "CreateGame": {
+        "src": "src/plugins/CreateGame",
+        "test": "test/plugins/CreateGame"
+      },
+      "PlayerMoves": {
+        "src": "src/plugins/PlayerMoves",
+        "test": "test/plugins/PlayerMoves"
       }
     },
     "routers": {},
@@ -38,7 +54,15 @@
         "src": "src/seeds/MetaModel_miniproject"
       }
     },
-    "visualizers": {}
+    "visualizers": {
+      "board": {
+        "src": "panels/board/boardPanel",
+        "title": "board",
+        "panel": "src/visualizers/panels/board",
+        "secondary": false,
+        "widget": "src/visualizers/widgets/board"
+      }
+    }
   },
   "dependencies": {
     "addons": {},

@@ -1,1 +1,8 @@
-[]
+[
+  {
+    "id": "board",
+    "title": "board",
+    "panel": "panels/board/boardPanel",
+    "DEBUG_ONLY": false
+  }
+]

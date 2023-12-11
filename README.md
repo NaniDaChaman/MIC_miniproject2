@@ -10,6 +10,7 @@ For a regular deployment, you need to install the following components on top of
 - install Docker Desktop
 - pull mongo db image from Docker Desktop
 - Create a container for the image 
+- when creating a container set Host port = 27017, container path =/data/db, give an appropriate host path
 - Run the container 
 - Fetch the repository
 
@@ -44,9 +45,9 @@ We use MetaModel_miniproject.webgmex.
 
 ### Plugin
 
-- active_tiles: this plugin is written in python and returns the set of tiles from this project.
-- auto: this plugin is written in python and it plays an available move for the next player.
-- count_color: this plugin is written in python and returns the number of black and white coloured tiles.
-- valid_check : written in python returns if a tile is a valid 
-- undo : written in python, returns the game back to a previous game state
+- active_tiles: this plugin is written in python and returns the set of tiles from this project, ran from the game folder
+- auto: this plugin is written in python and it plays an available move for the next player,ran from the game folder
+- count_color: this plugin is written in python and returns the number of black and white coloured tiles,ran from the game folder
+- undo : written in python, returns the game back to a previous game state,ran from the game folder
 - flip_tiles : written in python, flips the pieces when invoked from a tile.
+- since : our implementation of visualizer is incomplete please test this plugins with the run button by going to their respective nodes.
